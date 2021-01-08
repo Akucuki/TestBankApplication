@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/pb_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pb_name"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/bank_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/date_picker_pb_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/calendar"
+        android:onClick="onPickerClick"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/date_pb_textview"
+        app:layout_constraintBottom_toBottomOf="@id/date_pb_textview"/>
+
+    <TextView
+        android:id="@+id/date_pb_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="TestText"
+        android:textStyle="bold"
+        android:textColor="@color/date_caption"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TableLayout
+        android:id="@+id/pb_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1,2,3"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/pb_caption">
+        <TableRow>
+            <TextView
+                android:text="@string/pb_name"
+                android:textColor="@color/table_titles"
+                android:textSize="15sp"
+                android:layout_column="1"/>
+            <TextView
+                android:text="@string/purchase_caption"
+                android:textColor="@color/table_titles"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                android:layout_column="2"/>
+            <TextView
+                android:text="@string/selling_caption"
+                android:textColor="@color/table_titles"
+                android:textAlignment="textEnd"
+                android:textSize="15sp"
+                android:layout_column="3"/>
+        </TableRow>
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pb_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@id/pb_table"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/nbu_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nbu_name"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/bank_title"
+        android:layout_marginVertical="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pb_recycler"/>
+
+    <ImageButton
+        android:id="@+id/date_picker_nbu_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/calendar"
+        android:onClick="onPickerClick"
+        app:layout_constraintTop_toTopOf="@id/date_nbu_textview"
+        app:layout_constraintRight_toLeftOf="@id/date_nbu_textview"
+        app:layout_constraintBottom_toBottomOf="@id/date_nbu_textview"/>
+
+    <TextView
+        android:id="@+id/date_nbu_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="TestText"
+        android:textStyle="bold"
+        android:textColor="@color/date_caption"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/nbu_caption"
+        app:layout_constraintBottom_toBottomOf="@id/nbu_caption"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nbu_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/nbu_caption"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

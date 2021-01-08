@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TestBankApplication</string>
+    <string name="app_title">Курсы Валют</string>
+    <string name="pb_name">ПриватБанк</string>
+    <string name="nbu_name">НБУ</string>
+    <string name="vault_caption">Валюта</string>
+    <string name="purchase_caption">Покупка</string>
+    <string name="selling_caption">Продажа</string>
+</resources>
