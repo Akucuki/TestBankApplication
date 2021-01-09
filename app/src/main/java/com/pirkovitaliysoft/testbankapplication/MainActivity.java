@@ -42,11 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView pbRecyclerView;
     private RVpbAdapter pbAdapter;
-    private RecyclerView.LayoutManager pbLayoutManager;
 
     private RecyclerView nbuRecyclerView;
     private RVnbuAdapter nbuAdapter;
-    private RecyclerView.LayoutManager nbuLayoutManager;
 
     //Retrofit services
     private PbService pbService;
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         nbuRecyclerView = (RecyclerView) findViewById(R.id.nbu_recycler);
         nbuRecyclerView.setHasFixedSize(true);
 
-        pbLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager pbLayoutManager = new LinearLayoutManager(this);
         pbRecyclerView.setLayoutManager(pbLayoutManager);
         nbuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -93,7 +91,12 @@ public class MainActivity extends AppCompatActivity {
                 String currency = currentPbEntity.getCurrency() == null ? currentPbEntity.getBaseCurrency() : currentPbEntity.getCurrency();
                 int entityPos = getPositionOfVaultInNbu(currency, nbuEntities);
                 if(entityPos == -1) return;
-                nbuRecyclerView.scrollToPosition(entityPos);
+                nbuRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        nbuRecyclerView.scrollToPosition(entityPos);
+                    }
+                });
             }
         });
 
