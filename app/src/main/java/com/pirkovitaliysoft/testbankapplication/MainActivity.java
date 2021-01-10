@@ -1,5 +1,6 @@
 package com.pirkovitaliysoft.testbankapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.pirkovitaliysoft.testbankapplication.retrofit.PbService;
 import com.pirkovitaliysoft.testbankapplication.rvHandlers.RVnbuAdapter;
 import com.pirkovitaliysoft.testbankapplication.rvHandlers.RVpbAdapter;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +35,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private SimpleDateFormat dateFormatter;
 
     private TextView datePbTextView, dateNbuTextView;
 
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private List<PbEntity> pbEntities;
     private List<NbuEntity> nbuEntities;
 
+    private String pbDate = null, nbuDate = null;
+    private SimpleDateFormat dateFormatter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +69,16 @@ public class MainActivity extends AppCompatActivity {
         dateNbuTextView = (TextView) findViewById(R.id.date_nbu_textview);
 
         String formattedDate = dateFormatter.format(currentDate);
-        datePbTextView.setText(formattedDate);
-        dateNbuTextView.setText(formattedDate);
+        if(savedInstanceState != null){
+            pbDate = savedInstanceState.getString("pbDate", formattedDate);
+            nbuDate = savedInstanceState.getString("nbuDate", formattedDate);
+        }else{
+            pbDate = formattedDate;
+            nbuDate = formattedDate;
+        }
+
+        datePbTextView.setText(pbDate);
+        dateNbuTextView.setText(nbuDate);
 
         //Recyclers
         pbRecyclerView = (RecyclerView) findViewById(R.id.pb_recycler);
@@ -106,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         pbService = pbRetrofit.create(PbService.class);
-        pbService.listEntities(formattedDate).enqueue(new Callback<PbEntityContainer>() {
+        pbService.listEntities(pbDate).enqueue(new Callback<PbEntityContainer>() {
             @Override
             public void onResponse(Call<PbEntityContainer> call, Response<PbEntityContainer> response) {
                 if(response.isSuccessful()){
@@ -127,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         nbuService = nbuRetrofit.create(NbuService.class);
-        nbuService.listEntities(formattedDate).enqueue(new Callback<List<NbuEntity>>() {
+        nbuService.listEntities(nbuDate).enqueue(new Callback<List<NbuEntity>>() {
             @Override
             public void onResponse(Call<List<NbuEntity>> call, Response<List<NbuEntity>> response) {
                 if(response.isSuccessful()){
@@ -145,11 +157,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void onPickerClick(View view){
         DatePickerDialog datePickerDialog = new DatePickerDialog(this);
-
         datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                setDate(String.format(Locale.getDefault(), "%d.%d.%d", dayOfMonth, month, year), view);
+                String date = String.format(Locale.getDefault(), "%d.%d.%d", dayOfMonth, month + 1, year);
+                try {
+                    date = dateFormatter.format(dateFormatter.parse(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                setDate(date, view);
             }
         });
 
@@ -160,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.date_picker_pb_button:
                 datePbTextView.setText(date);
+                pbDate = date;
 
                 pbService.listEntities(date).enqueue(new Callback<PbEntityContainer>() {
                     @Override
@@ -178,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.date_picker_nbu_button:
                 dateNbuTextView.setText(date);
+                nbuDate = date;
 
                 nbuService.listEntities(date).enqueue(new Callback<List<NbuEntity>>() {
                     @Override
@@ -200,9 +219,19 @@ public class MainActivity extends AppCompatActivity {
     private int getPositionOfVaultInNbu(String vault, List<NbuEntity> entities){
         for (int i = 0; i < entities.size(); i++) {
             NbuEntity entity = entities.get(i);
+            if(entity.getCurrencyCodeL() == null)
+                continue;
             if (entity.getCurrencyCodeL().toLowerCase().equals(vault.toLowerCase()))
                 return i;
         }
         return -1;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("pbDate", pbDate);
+        outState.putString("nbuDate", nbuDate);
     }
 }
